@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Wallet 2FA</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #0c0c0c, #1a1a2e, #16213e);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #fff;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        width: 220px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        z-index: 100;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        object-fit: cover;
+      }
+
+      .login-container {
+        background: rgba(30, 30, 46, 0.95);
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        padding: 50px 40px;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      .login-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(to right, #00e0ff, #b21f1f, #fdbb2d);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      h2 {
+        color: #00e0ff;
+        margin-bottom: 30px;
+        font-size: 32px;
+        text-shadow: 0 2px 10px rgba(0, 224, 255, 0.3);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      label {
+        text-align: left;
+        color: #e0e0e0;
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #00e0ff;
+        box-shadow: 0 0 0 2px rgba(0, 224, 255, 0.3);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      button {
+        background: linear-gradient(135deg, #b21f1f, #fdbb2d);
+        color: white;
+        border: none;
+        padding: 14px 35px;
+        border-radius: 30px;
+        font-size: 17px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        box-shadow: 0 4px 15px rgba(253, 187, 45, 0.3);
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(253, 187, 45, 0.5);
+        background: linear-gradient(135deg, #fdbb2d, #b21f1f);
+      }
+
+      button:active {
+        transform: translateY(-1px);
+      }
+
+      hr {
+        border: none;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 25px 0;
+      }
+
+      #message {
+        min-height: 24px;
+        color: #00e0ff;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .text-centre {
+        text-align: center;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 20px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        width: 100%;
+        left: 0;
+      }
+
+      .loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .shake {
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+      }
+
+      @media (max-width: 600px) {
+        .login-container {
+          padding: 40px 25px;
+        }
+        
+        .logo {
+          width: 180px;
+          top: 15px;
+          left: 15px;
+        }
+        
+        h2 {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- RVCE Logo -->
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Rv_New_logo_with_address.jpg"
+      alt="RV College of Engineering Logo"
+      class="logo"
+    />
+
+    <div class="login-container">
+      <h2>🔐 Login</h2>
+      <form id="loginForm">
+        <div>
+          <label for="username">Username:</label>
+          <input type="text" id="username" placeholder="Enter your username" required />
+        </div>
+
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+
+        <div class="text-centre">
+          <button type="submit">Login</button>
+        </div>
+      </form>
+
+      <hr />
+      <p id="message"></p>
+    </div>
+
+    <div class="footer">
+      <p>RV College of Engineering &copy; 2023 | Mysore Road, Bengaluru - 560059</p>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('loginForm');
+        const messageElement = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Demo credentials
+        const demoCredentials = {
+          username: 'admin',
+          password: 'password123'
+        };
+
+        // Focus on username field when page loads
+        usernameInput.focus();
+
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+
+          // Clear previous message
+          messageElement.textContent = '';
+          messageElement.style.color = '#00e0ff';
+
+          // Validate inputs
+          if (!username || !password) {
+            showMessage('Please fill in all fields', 'error');
+            return;
+          }
+
+          // Show loading state
+          loginForm.classList.add('loading');
+          messageElement.textContent = 'Authenticating...';
+
+          // Simulate API call with timeout
+          setTimeout(() => {
+            loginForm.classList.remove('loading');
+
+            // Check credentials
+            if (username === demoCredentials.username && password === demoCredentials.password) {
+              showMessage('Login successful! Redirecting...', 'success');
+              
+              // Redirect to dashboard after successful login
+              setTimeout(() => {
+                window.location.href = 'dashboard.html';
+              }, 1500);
+            } else {
+              showMessage('Invalid username or password', 'error');
+              loginForm.classList.add('shake');
+              setTimeout(() => loginForm.classList.remove('shake'), 500);
+              
+              // Clear password field
+              passwordInput.value = '';
+              passwordInput.focus();
+            }
+          }, 1500);
+        });
+
+        function showMessage(text, type) {
+          messageElement.textContent = text;
+          messageElement.style.color = type === 'error' ? '#ff6b6b' : '#00e0ff';
+          
+          if (type === 'success') {
+            messageElement.style.textShadow = '0 0 10px rgba(0, 224, 255, 0.5)';
+          } else {
+            messageElement.style.textShadow = 'none';
+          }
+        }
+
+        // Add input field animations
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+          input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+          });
+          
+          input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+
