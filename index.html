@@ -176,6 +176,38 @@
         75% { transform: translateX(10px); }
       }
 
+      .metamask-section {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metamask-button {
+        background: linear-gradient(135deg, #f6851b, #e2761b);
+        margin-top: 15px;
+      }
+
+      .metamask-button:hover {
+        background: linear-gradient(135deg, #e2761b, #f6851b);
+        box-shadow: 0 8px 25px rgba(226, 118, 27, 0.5);
+      }
+
+      .install-metamask {
+        display: inline-block;
+        margin-top: 15px;
+        color: #f6851b;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .install-metamask:hover {
+        text-decoration: underline;
+        transform: translateY(-2px);
+      }
+
       @media (max-width: 600px) {
         .login-container {
           padding: 40px 25px;
@@ -219,6 +251,17 @@
         </div>
       </form>
 
+      <div class="metamask-section">
+        <h3>MetaMask Verification</h3>
+        <p>After entering your credentials, verify with MetaMask</p>
+        <button id="metamaskButton" class="metamask-button">Verify with MetaMask</button>
+        <div>
+          <a href="https://metamask.io/download.html" target="_blank" class="install-metamask">
+            Don't have MetaMask? Install it here
+          </a>
+        </div>
+      </div>
+
       <hr />
       <p id="message"></p>
     </div>
@@ -230,6 +273,7 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const loginForm = document.getElementById('loginForm');
+        const metamaskButton = document.getElementById('metamaskButton');
         const messageElement = document.getElementById('message');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
@@ -243,7 +287,62 @@
         // Focus on username field when page loads
         usernameInput.focus();
 
-        loginForm.addEventListener('submit', function(e) {
+        // Check if MetaMask is installed
+        function isMetaMaskInstalled() {
+          return typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask;
+        }
+
+        // Generate a nonce for verification
+        function generateNonce() {
+          return Math.floor(Math.random() * 1000000).toString();
+        }
+
+        // Request MetaMask signature
+        async function requestSignature(nonce) {
+          if (!isMetaMaskInstalled()) {
+            throw new Error('MetaMask is not installed');
+          }
+
+          try {
+            // Request account access
+            const accounts = await window.ethereum.request({
+              method: 'eth_requestAccounts'
+            });
+
+            if (accounts.length === 0) {
+              throw new Error('No accounts found');
+            }
+
+            const account = accounts[0];
+            const message = `Please sign this message to verify your identity. Nonce: ${nonce}`;
+
+            // Request signature
+            const signature = await window.ethereum.request({
+              method: 'personal_sign',
+              params: [message, account],
+            });
+
+            return { account, signature, message };
+          } catch (error) {
+            throw new Error(`MetaMask signature failed: ${error.message}`);
+          }
+        }
+
+        // Verify signature with backend (simulated)
+        async function verifySignature(account, signature, message) {
+          // In a real implementation, this would be a call to your backend
+          // For demo purposes, we'll simulate a successful verification
+          
+          // Simulate API call delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // For demo, always return true
+          // In production, you would verify the signature against the nonce
+          return true;
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async function(e) {
           e.preventDefault();
           
           const username = usernameInput.value.trim();
@@ -269,12 +368,10 @@
 
             // Check credentials
             if (username === demoCredentials.username && password === demoCredentials.password) {
-              showMessage('Login successful! Redirecting...', 'success');
+              showMessage('Credentials verified. Please complete MetaMask verification.', 'success');
               
-              // Redirect to dashboard after successful login
-              setTimeout(() => {
-                window.location.href = 'dashboard.html';
-              }, 1500);
+              // Enable MetaMask button
+              metamaskButton.disabled = false;
             } else {
               showMessage('Invalid username or password', 'error');
               loginForm.classList.add('shake');
@@ -285,6 +382,53 @@
               passwordInput.focus();
             }
           }, 1500);
+        });
+
+        // Handle MetaMask verification
+        metamaskButton.addEventListener('click', async function() {
+          // Check if credentials were verified first
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+          
+          if (username !== demoCredentials.username || password !== demoCredentials.password) {
+            showMessage('Please verify your credentials first', 'error');
+            return;
+          }
+
+          // Check if MetaMask is installed
+          if (!isMetaMaskInstalled()) {
+            showMessage('MetaMask is not installed. Please install it to continue.', 'error');
+            return;
+          }
+
+          try {
+            // Show loading state
+            metamaskButton.disabled = true;
+            messageElement.textContent = 'Requesting MetaMask signature...';
+
+            // Generate nonce and request signature
+            const nonce = generateNonce();
+            const { account, signature, message } = await requestSignature(nonce);
+
+            // Verify signature
+            messageElement.textContent = 'Verifying signature...';
+            const isValid = await verifySignature(account, signature, message);
+
+            if (isValid) {
+              showMessage('MetaMask verification successful! Redirecting...', 'success');
+              
+              // Redirect to dashboard after successful verification
+              setTimeout(() => {
+                // For Vercel deployment, ensure the dashboard.html file exists in your project
+                window.location.href = 'dashboard.html';
+              }, 1500);
+            } else {
+              throw new Error('Signature verification failed');
+            }
+          } catch (error) {
+            showMessage(error.message, 'error');
+            metamaskButton.disabled = false;
+          }
         });
 
         function showMessage(text, type) {
@@ -309,6 +453,9 @@
             this.parentElement.style.transform = 'scale(1)';
           });
         });
+
+        // Initialize MetaMask button state
+        metamaskButton.disabled = true;
       });
     </script>
   </body>
