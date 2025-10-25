@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "wallet-2-fa",
   "version": "1.0.0",
   "description": "",
@@ -14,5 +15,18 @@
     "cors": "^2.8.5",
     "ethers": "^6.15.0",
     "express": "^5.1.0"
+=======
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7"
+>>>>>>> 9b8171db8f3481a7a7a3e68537e91644d5b7190c
   }
 }

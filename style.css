@@ -1,0 +1,116 @@
+/* 🌙 Reset basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #001f3f, #0059ff);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* 🌟 Login container */
+.login-container {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 140, 255, 0.4);
+  width: 320px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 174, 255, 0.3);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* 🧢 Header */
+h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(0, 174, 255, 0.8);
+}
+
+/* 🧩 Input fields */
+input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid rgba(0, 174, 255, 0.3);
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  border-color: #00ccff;
+  box-shadow: 0 0 10px #00ccff;
+}
+
+input::placeholder {
+  color: #cfdfff;
+}
+
+/* 🚀 Button */
+button {
+  width: 95%;
+  background: linear-gradient(90deg, #0066ff, #00ccff);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 174, 255, 0.6);
+}
+
+button:hover {
+  background: linear-gradient(90deg, #00aaff, #007bff);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 174, 255, 0.9);
+}
+
+/* ✨ Message text */
+#message {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Fade-in animation */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+            transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+            transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
